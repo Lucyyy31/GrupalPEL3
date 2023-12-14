@@ -13,7 +13,7 @@ private:
     string titulo;
     string autor;
     string genero;
-    Dynarray<Cancion> *canciones;
+    Dynarray<Cancion> *canciones = new Dynarray<Cancion>(5);
 public:
     Album(){
         titulo = "";
@@ -50,6 +50,9 @@ public:
             }
         }
     }
-
+    ~Album() {
+        delete canciones;
+        cout << "Album deleted" << endl;
+    }
 };
 #endif //GRUPO6_AC3_ALBUM_H

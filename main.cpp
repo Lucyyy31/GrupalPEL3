@@ -33,6 +33,7 @@ void menuMusica() {
             switch (opcionCanciones) {
                 case 1:
                     cout << "Mostrando todas las canciones:" << endl;
+
                     break;
                 case 2:
                     cout << "Buscando canciones por autor:" << endl;
@@ -104,6 +105,7 @@ int main() {
                 album1.addCancion(cancion1);
                 album1.addCancion(cancion2);
                 album1.addCancion(cancion3);
+                albumes->insert(album1);
                 menuMusica();
                 break;}
             case 2:
