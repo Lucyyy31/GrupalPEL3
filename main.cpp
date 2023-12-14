@@ -12,7 +12,7 @@ void mostrarMenu() {
     cout << "4. Salir" << endl;
     cout << "Ingrese el numero de la opcion: ";
 }
-void menuMusica() {
+void menuMusica(Dynarray<Album> * albumes) {
     cout << "Menu musica:" << endl;
     cout << "1. Mostrar canciones" << endl;
     cout << "2. Mostrar albumes" << endl;
@@ -33,10 +33,17 @@ void menuMusica() {
             switch (opcionCanciones) {
                 case 1:
                     cout << "Mostrando todas las canciones:" << endl;
-
+                    for (int i = 0; i < albumes->count; ++i) {
+                        albumes->first[i].mostrarCanciones();
+                    }
                     break;
                 case 2:
                     cout << "Buscando canciones por autor:" << endl;
+                    for (int i = 0; i < albumes->count; ++i) {
+                        for(int j = 0; i < albumes->count; i++){
+                           // albumes->first[i][j].buscarCancion("Autor1");
+                        }
+                    }
                     break;
                 case 3:
                     cout << "Buscando canciones por genero:" << endl;
@@ -60,9 +67,15 @@ void menuMusica() {
             switch (opcionAlbumes) {
                 case 1:
                     cout << "Mostrando todos los albumes:" << endl;
+                    for (int i = 0; i < albumes->count; ++i) {
+                        cout << albumes->first[i].getTitulo() << endl;
+                    }
                     break;
                 case 2:
                     cout << "Buscando albumes por autor:" << endl;
+                    for (int i = 0; i < albumes->count; ++i) {
+                        albumes->first[i].buscarAlbum("Autor1");
+                    }
                     break;
                 case 3:
                     cout << "Buscando albumes por genero:" << endl;
@@ -106,7 +119,7 @@ int main() {
                 album1.addCancion(cancion2);
                 album1.addCancion(cancion3);
                 albumes->insert(album1);
-                menuMusica();
+                menuMusica(albumes);
                 break;}
             case 2:
 

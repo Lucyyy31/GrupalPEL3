@@ -50,6 +50,7 @@ public:
             }
         }
     }
+
     ~Album() {
         delete canciones;
         cout << "Album deleted" << endl;
