@@ -5,5 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Grupo6_AC3 main.cpp
         Cancion.h
-        DynArray.h
-        Vector.h)
+        Dynarray.h
+        Vector.h
+        Album.h)
+
