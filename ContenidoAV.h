@@ -50,9 +50,22 @@ public:
         ContenidoAV::available = available;
     }
 
+    friend ostream& operator<<(ostream& os, const ContenidoAV& contenidoAV){
+        os << "Contenido AV" << endl;
+        os << "Titulo: " << contenidoAV.getTitulo() << endl;
+        os << "Genero: " << contenidoAV.getGenero() << endl;
+        os << "Calidad: " << (contenidoAV.IsUHD()?"UHD":"FHD") << endl;
+        os << "incluido con la tarifa basica?: " << (contenidoAV.IsPPV()?"no":"si") << endl;
+        if(contenidoAV.IsPPV()){
+            os << "Precio PPV: " << contenidoAV.getPpvPrice() << endl;
+        }
+        return os;
+    }
+
+    virtual ~ContenidoAV()=default;
 }; 
 
-Class Pelicula: public ContenidoAV{
+class Pelicula: public ContenidoAV{
 private:
     int duracion;
 public:
@@ -72,16 +85,18 @@ public:
         os << "Titulo: " << pelicula.getTitulo() << endl;
         os << "Genero: " << pelicula.getGenero() << endl;
         os << "Duracion: " << pelicula.getDuracion() << endl;
-        os << "Calidad: " << serie.IsUHD()?"UHD":"FHD" << endl;
-        os << "incluido con la tarifa basica?: " << serie.IsPPV()?"no":"si" << endl;
+        os << "Calidad: " << (pelicula.IsUHD()?"UHD":"FHD") << endl;
+        os << "incluido con la tarifa basica?: " << (pelicula.IsPPV()?"no":"si" )<< endl;
         if(pelicula.IsPPV()){
             os << "Precio PPV: " << pelicula.getPpvPrice() << endl;
         }
         return os;
     }
+
+    ~Pelicula()=default;
 };
 
-Class Serie: public ContenidoAV{
+class Serie: public ContenidoAV{
 private:
     int numEpisodios;
 public:
@@ -101,13 +116,15 @@ public:
         os << "Titulo: " << serie.getTitulo() << endl;
         os << "Genero: " << serie.getGenero() << endl;
         os << "Numero de episodios: " << serie.getNumEpisodios() << endl;
-        os << "Calidad: " << serie.IsUHD()?"UHD":"FHD" << endl;
-        os << "incluido con la tarifa basica?: " << serie.IsPPV()?"no":"si" << endl;
+        os << "Calidad: " << (serie.IsUHD()?"UHD":"FHD" )<< endl;
+        os << "incluido con la tarifa basica?: " << (serie.IsPPV()?"no":"si") << endl;
         if(serie.IsPPV()){
             os << "Precio PPV: " << serie.getPpvPrice() << endl;
         }
         return os;
     }
+
+    ~Serie()=default;
 };
 
 

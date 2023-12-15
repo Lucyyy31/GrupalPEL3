@@ -28,7 +28,7 @@ public:
         bool found = false;
         for(int i = 0; i < contenido.size(); i++){
             if(contenido[i]->getTitulo() == titulo){
-                contenido.erase(i);
+                contenido.removeElementAt(i);
                 found = true;
             }
         }
@@ -40,17 +40,18 @@ public:
         }
     }
 
-/// @brief Busca un ContenidoAV(serie o pelicula) en el vector contenido
+/// @brief Busca todos los ContenidoAV(serie o pelicula) en el catalogo con un determinado titulo
 /// @param titulo Titulo del ContenidoAV a buscar
-/// @return puntero al ContenidoAV encontrado
-    ContenidoAV* getContenido(string titulo){
-        for(int i = 0; i < contenido.size(); i++){
-            if(contenido[i]->getTitulo() == titulo){
-                return contenido[i];
-            }
+/// @return Vector de punteros a ContenidoAV encontrados
+Vector<ContenidoAV*> getContenidoByTitulo(string titulo){
+    Vector<ContenidoAV*> result;
+    for(int i = 0; i < contenido.size(); i++){
+        if(contenido[i]->getTitulo() == titulo){
+            result.push_back(contenido[i]);
         }
-        return nullptr; // no se encontró el contenido
     }
+    return result; // retorna el vector de contenidos encontrados
+}
 
 /// @brief Busca un ContenidoAV(serie o pelicula) en el vector contenido
 /// @param genero Genero del ContenidoAV a buscar
@@ -73,6 +74,16 @@ public:
         return contenidoUHD;
     }
 
+     Vector<ContenidoAV*> getContenidoByCalidad(string calidad){
+        bool UHD = (calidad == "UHD")|| (calidad == "uhd");
+        Vector<ContenidoAV*> contenidoUHD;
+        for(int i = 0; i < contenido.size(); i++){
+            if(contenido[i]->IsUHD()==UHD){
+                contenidoUHD.push_back(contenido[i]);
+            }
+        }
+        return contenidoUHD;
+    }
 
     Vector<ContenidoAV*> getContenidoByPPV(){
         Vector<ContenidoAV*> contenidoPPV;
@@ -93,22 +104,28 @@ public:
         return contenidoAvailable;
     }
 
-    Vector<ContenidoAV*> getSeries(){
-        Vector<ContenidoAV*> contenidoSeries;
+    Vector<Serie*> getSeries(){
+        Vector<Serie*> contenidoSeries;
         string idSerie=typeid(Serie).name();
         for(int i = 0; i < contenido.size(); i++){
-            if(typeid(contenido[i]).name()==idSerie){
-                contenidoSeries.push_back(contenido[i]);
+            if(typeid(*contenido[i]).name()==idSerie){
+                Serie* serie = dynamic_cast<Serie*>(contenido[i]);
+                if(serie != nullptr){
+                    contenidoSeries.push_back(serie);
+                }
             }
         }
         return contenidoSeries;
     }
-    Vector<ContenidoAV*> getPeliculas(){
-        Vector<ContenidoAV*> contenidoPeliculas;
+    Vector<Pelicula*> getPeliculas(){
+        Vector<Pelicula*> contenidoPeliculas;
         string idPelicula=typeid(Pelicula).name();
         for(int i = 0; i < contenido.size(); i++){
-            if(typeid(contenido[i]).name()==idPelicula){
-                contenidoPeliculas.push_back(contenido[i]);
+            if(typeid(*contenido[i]).name()==idPelicula){
+                Pelicula* pelicula = dynamic_cast<Pelicula*>(contenido[i]);
+                if(pelicula != nullptr){
+                    contenidoPeliculas.push_back(pelicula);
+                }
             }
         }
         return contenidoPeliculas;
@@ -119,6 +136,13 @@ public:
             os << catalogo.contenido[i]->getTitulo() << endl;
         }
         return os;
+    }
+
+    //destructor
+    ~Catalogo(){
+        for(int i = 0; i < contenido.size(); i++){
+            delete contenido[i];
+        }
     }
 };
 #endif //GRUPO6_AC3_CATALOGO_H
