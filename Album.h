@@ -50,20 +50,6 @@ public:
         }
     }
 
-/*
-    void buscarAlbum(string a){
-        for (int i = 0; i < canciones->size(); ++i) {
-            if (canciones->firstelemento[i].getTitulo() == a || canciones->firstelemento[i].getAlbum() == a ||
-            canciones->firstelemento[i].getAutor() == a || canciones->firstelemento[i].getGenero() == a) {
-                cout << "El elemento " << a << " se encuentra en la posicion " << i << endl;
-                cout << "Titulo: " << canciones->firstelemento[i].getTitulo() << endl;
-                cout << "Album: " << canciones->firstelemento[i].getAlbum() << endl;
-                cout << "Autor: " << canciones->firstelemento[i].getAutor() << endl;
-                cout << "Genero: " << canciones->firstelemento[i].getGenero() << endl;
-            }
-        }
-    }
-    */
     void searchGenerico(string generico) {
         bool encontrado = false;
         if (canciones->size() != 0) {
@@ -91,6 +77,9 @@ public:
         delete canciones;
         canciones = nullptr;
        // cout << "Album deleted" << endl;
+    }
+    bool perteneceAlbum(Cancion& cancion)  {
+        return cancion.getAlbum() == this->getTitulo();
     }
 };
 #endif //GRUPO6_AC3_ALBUM_H

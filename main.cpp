@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>  // Necesario para la función rand()
 #include "Cancion.h"
 #include "DynArray.h"
 #include "Album.h"
@@ -96,47 +97,79 @@ int main() {
 
     do {
         mostrarMenu();
-        while (!(cin >> opcion)){
+        while (!(cin >> opcion)) {
             cout << "ingrese una opcion valida!" << endl;
             cin.clear();
-            cin.ignore(40,'\n');
+            cin.ignore(40, '\n');
             mostrarMenu();
         };
         switch (opcion) {
-            case 1:{
+            case 1: {
                 Dynarray<Cancion> *canciones = new Dynarray<Cancion>(5);
                 Dynarray<Album> *albumes = new Dynarray<Album>(5);
-                Cancion cancion1("Cancion1", "Autor1", "Genero1");
-                Cancion cancion2("Cancion2", "Autor2", "Genero2");
-                Cancion cancion3("Cancion3", "Autor3", "Genero3");
-
-                canciones->push(cancion1);
-                canciones->push(cancion2);
-                canciones->push(cancion3);
-
                 Album album1("Album1", "Autor1", "Genero1");
-                album1.addCancion(cancion1);
-                album1.addCancion(cancion2);
-                album1.addCancion(cancion3);
+                Album album2("Album2", "Autor2", "Genero2");
+                Album album3("Album3", "Autor3", "Genero3");
                 albumes->push(album1);
+                albumes->push(album2);
+                albumes->push(album3);
+                string nombresAlbumes[] = {"Album1", "Album2", "Album3"};
+                string nombresCanciones[] = {"Cancion1", "Cancion2", "Cancion3", "Cancion4", "Cancion5",
+                                             "Cancion6", "Cancion7", "Cancion8", "Cancion9", "Cancion10"};
+                string nombresAutores[] = {"Autor1", "Autor2", "Autor3"};
+                string nombresGeneros[] = {"Genero1", "Genero2", "Genero3"};
+
+                for (int i = 0; i < 10; ++i) {
+                    string nombreAlbum = nombresAlbumes[rand() % 3];
+                    string nombreCancion = nombresCanciones[rand() % 10];
+                    string nombreAutor = nombresAutores[rand() % 3];
+                    string nombreGenero = nombresGeneros[rand() % 3];
+                    Cancion cancion(nombreCancion, nombreAutor, nombreGenero);
+                    bool cancionAgregada = false;
+                    for (int j = 0; j < albumes->size(); ++j) {
+                        if (albumes->getFirstelemento()[j].getTitulo() == nombreAlbum) {
+                            // Verificar si la canción ya está en el álbum
+                            if (albumes->getFirstelemento()[j].perteneceAlbum(cancion) && cancion.getTitulo() == nombreCancion) {
+                                cancionAgregada = true;
+                            }
+                        }
+                    }
+                    if (!cancionAgregada) {
+                        if (cancion.getAutor() == album1.getAutor()) {
+                            album1.addCancion(cancion);
+                            cancion.setAlbum(album1.getTitulo());
+                            canciones->push(cancion);
+                        } else if (cancion.getAutor() == album2.getAutor()) {
+                            album2.addCancion(cancion);
+                            cancion.setAlbum(album2.getTitulo());
+                            canciones->push(cancion);
+                        } else if (cancion.getAutor() == album3.getAutor()) {
+                            album3.addCancion(cancion);
+                            cancion.setAlbum(album3.getTitulo());
+                            canciones->push(cancion);
+                        }
+                    }
+                }
                 if (albumes->isEmpty()) {
                     cout << "No hay albumes." << endl;
                 } else {
                     menuMusica(albumes);
                 }
-                break;}
-            case 2:
+                    break;
+                }
+                case 2:
 
-                break;
-            case 3:
+                    break;
+                case 3:
 
+                    break;
+                case 4:
+                    cout << "Saliendo del programa." << endl;
                 break;
-            case 4:
-                cout << "Saliendo del programa." << endl;
-                break;
-            default:
-                cout << "Opcion no valida. Intente de nuevo." << endl;
+                default:
+                    cout << "Opcion no valida. Intente de nuevo." << endl;
+            }
         }
-    } while (opcion != 4);
-    return 0;
-}
+        while (opcion != 4);
+        return 0;
+    }

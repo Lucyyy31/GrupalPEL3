@@ -37,12 +37,5 @@ public:
     void setAlbum(string a){
         album = a;
     }
-    void buscarCancion(string a){
-        if (autor == a){
-            cout << titulo << endl;
-        }
-    }
-
-
 };
 #endif //GRUPO6_AC3_CANCION_H
