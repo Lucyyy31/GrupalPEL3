@@ -361,6 +361,18 @@ int main()
                         {
                             cout << *contenido << endl;
                         }
+                        if(getInput<string>("Desea ver el contenido?(si/no): ", promptError, 0, [](string x)
+                                          { return x == "si" || x == "no"; }) == "si"){
+                            prompt = "Ingrese el titulo exacto del contenido a ver: ";
+                            string tituloExacto = getInput<string>(prompt, promptError, 0);
+                            ContenidoAV* contenidoAV = catalogo.getContenidoByTitulo(tituloExacto)[0];
+                            if(contenidoAV->isAvailable()){
+                                contenidoAV->setAvailable(false);
+                            }
+                            else{
+                                cout<<"El contenido no está disponible"<<endl;
+                            }
+                        }
                     }
                 }
                 break;

@@ -20,6 +20,7 @@ public:
         else{
             ContenidoAV::ppvPrice = 0;
         }
+        ContenidoAV::available= true;
     }
     ContenidoAV(string titulo, string genero, bool isUHD){
         ContenidoAV::titulo = titulo;
@@ -27,6 +28,7 @@ public:
         ContenidoAV::isUHD = isUHD;
         ContenidoAV::isPPV = false;
         ContenidoAV::ppvPrice = 0;
+        ContenidoAV::available= true;
     }
     string getTitulo() const {
         return titulo;
@@ -56,9 +58,10 @@ public:
         os << "Genero: " << contenidoAV.getGenero() << endl;
         os << "Calidad: " << (contenidoAV.IsUHD()?"UHD":"FHD") << endl;
         os << "incluido con la tarifa basica?: " << (contenidoAV.IsPPV()?"no":"si") << endl;
-        if(contenidoAV.IsPPV()){
+        if(contenidoAV.IsPPV()) {
             os << "Precio PPV: " << contenidoAV.getPpvPrice() << endl;
         }
+        os << "Disponible?: "<<(contenidoAV.isAvailable()?"si":"no")<<endl;
         return os;
     }
 
@@ -90,6 +93,7 @@ public:
         if(pelicula.IsPPV()){
             os << "Precio PPV: " << pelicula.getPpvPrice() << endl;
         }
+        os<<"Disponible: "<<(pelicula.isAvailable()?"si":"no")<<endl;
         return os;
     }
 
@@ -121,6 +125,8 @@ public:
         if(serie.IsPPV()){
             os << "Precio PPV: " << serie.getPpvPrice() << endl;
         }
+        os<<"Disponible: "<<(serie.isAvailable()?"si":"no")<<endl;
+
         return os;
     }
 

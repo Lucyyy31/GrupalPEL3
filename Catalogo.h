@@ -94,6 +94,8 @@ Vector<ContenidoAV*> getContenidoByTitulo(string titulo){
         }
         return contenidoPPV;
     }
+
+
     Vector<ContenidoAV*> getContenidoDisponible(){
         Vector<ContenidoAV*> contenidoAvailable;
         for(int i = 0; i < contenido.size(); i++){
@@ -104,6 +106,9 @@ Vector<ContenidoAV*> getContenidoByTitulo(string titulo){
         return contenidoAvailable;
     }
 
+
+    /// @brief permite obtener todas las series del catalogo
+    /// @return un vector de punteros a series
     Vector<Serie*> getSeries(){
         Vector<Serie*> contenidoSeries;
         string idSerie=typeid(Serie).name();
@@ -117,6 +122,9 @@ Vector<ContenidoAV*> getContenidoByTitulo(string titulo){
         }
         return contenidoSeries;
     }
+
+    /// @brief permite obtener todas las peliculas del catalogo
+    /// @return un vector de punteros a peliculas
     Vector<Pelicula*> getPeliculas(){
         Vector<Pelicula*> contenidoPeliculas;
         string idPelicula=typeid(Pelicula).name();
@@ -130,6 +138,11 @@ Vector<ContenidoAV*> getContenidoByTitulo(string titulo){
         }
         return contenidoPeliculas;
     }
+
+    /// @brief Sobrecarga del operador << para imprimir el catalogo
+    /// @param os el flujo de salida ( buffer de texto)
+    /// @param catalogo el objeto
+    /// @return el flujo de salida modificado para tener la informacion concatenada a él
     friend ostream& operator<<(ostream& os, const Catalogo& catalogo){
         os << "Catalogo" << endl;
         for(int i = 0; i < catalogo.contenido.size(); i++){
