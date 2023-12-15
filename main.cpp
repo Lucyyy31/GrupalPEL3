@@ -6,6 +6,9 @@
 #include "ContenidoAV.h"
 #include "Catalogo.h"
 #include "Vector.h"
+#include <limits>
+#include <functional>
+
 using namespace std;
 
 /// @brief un metodo que permite obtener un input del tipo T, con un mensaje de error y un limite de intentos
@@ -322,14 +325,14 @@ int main()
                     pick2 = getInput<int>(prompt, promptError, 0, [](int x)
                                           { return x > 0 && x < 5; });
                     if(pick2!=4){
-                    if (pick2 != 2)
+                    if (pick2 != 1)
                     {
                         for (Pelicula *pelicula : catalogo.getPeliculas())
                         {
                             cout << *pelicula << endl;
                         }
                     }
-                    if (pick2 != 1)
+                    if (pick2 != 2)
                     {
                         for (Serie *serie : catalogo.getSeries())
                         {
@@ -455,6 +458,7 @@ int main()
         break;
         case 3:
             cout << "Saliendo del programa." << endl;
+            delete &catalogo;
             break;
         default:
             cout << "Opcion no valida. Intente de nuevo." << endl;
