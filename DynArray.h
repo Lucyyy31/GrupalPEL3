@@ -9,125 +9,126 @@ using namespace std;
 template <typename T>
 class Dynarray {
 private:
+    T* firstelemento; //puntero al primer elemento
+    int contador; //numero de elementos guardados
+    size_t max; //final del array
 public:
-//atributos
-    T *first;
-    size_t count;
-    size_t max_count;
+    //Constructor para definir tamaño del array y uno vacío para definirlo después
+    Dynarray(): firstelemento(nullptr), contador(0) , max(1){}
+    Dynarray(size_t n): firstelemento(new T[n]), contador(0), max(n){}
 
-    Dynarray() {
-        Dynarray::first = nullptr;
-        Dynarray::count = 0;
-        Dynarray::max_count = 1;
-    };
-    Dynarray(size_t c) {
-        Dynarray::first = new T[c];
-        Dynarray::count = 0;
-        Dynarray::max_count = c;
-    };
-//metodos
-    void insert(T e) {
-        if (Dynarray::count >= Dynarray::max_count) {
-            Dynarray::alloc();
-        }
-        Dynarray::first[Dynarray::count] = e;
-        Dynarray::count++;
-    };
-
-    void remove(T e) {
-        int index = -1;
-        for (int i = 0; i < count && index == -1; ++i) {
-            if (first[i] == e) {
-                index = i;
+    //Agregar elementos al array
+    void push(T& e){
+        if (contador >= max){
+            max = max*2; //Duplicar tamaño del array
+            T* aux = new T[max]; //Crear array auxiliar
+            for (int i = 0; i < contador; i++){ // al estar lleno de igual si se usa max o contador
+                aux[i] = firstelemento[i]; //Copiar elementos del array original al auxiliar
             }
+            delete[] firstelemento; //Borrar elementos del array original
+            firstelemento = aux; //Asignar array auxiliar al original
         }
-        if (index != -1) {
-            for (int i = index; i < count - 1; ++i) {
-                first[i] = first[i + 1];
-            }
-            --count;
-            T* newFirst = new T[count];
-            for (int i = 0; i < count; ++i) {
-                newFirst[i] = first[i];
-            }
-            delete[] first;
-            first = newFirst;
-            max_count = count;
-        }
+        firstelemento[contador] = e;
+        contador++;
     }
 
-    T search(T e) {
-        for (int i = 0; i < count; ++i) {
-            if (first[i] == e) {
-                return first[i];
+    void toString(){
+        for (int i = 0; i < contador; ++i) {
+            cout<<firstelemento[i]<<" ";
+        }
+        cout<<" "<<endl;
+    }
+
+    // Sacar un elemento del array
+    void pop(int indice){
+        if(contador != 0){
+            if (indice <= contador){
+                T* aux = new T[max]; //Crear array auxiliar
+                int j = 0;
+                for (int i = 0; i < contador; i++){
+                    if(i != indice){
+                        aux[j] = firstelemento[i]; //Copiar elementos del array original al auxiliar
+                        j++;
+                    }
+                }
+                delete [] firstelemento;
+                firstelemento = aux;
+                contador--;
             }
         }
-        throw std::runtime_error("Element not found");
-    };
-
-    void A_Zsort() {
-        for (int i = 0; i < count; ++i) {
-            for (int j = 0; j < count - 1; ++j) {
-                if (first[j] > first[j + 1]) {
-                    T aux = first[j];
-                    first[j] = first[j + 1];
-                    first[j + 1] = aux;
+    }
+    void search(T e){
+        bool encontrado = false;
+        if(contador != 0 ){
+            for(int i = 0; i < contador; i++){
+                if(firstelemento[i] == e){
+                    cout << "El elemento " << e << " se encuentra en la posicion " << i << endl;
+                    encontrado = true;
                 }
             }
+        }else{
+            cout<<"El array está vacio." <<endl;
         }
-    };
+        if(!encontrado){
+            cout << "El elemento " << e << " no se encuentra en el array" << endl;
+        }
 
-    float suma() {
-        float suma = 0;
-        for (int i = 0; i < count; ++i) {
-            suma += first[i];
-        }
-        return suma;
-    };
-    float promedio() {
-        return suma() / count;
-    };
-    float moda() {
-        int moda = 0;
-        int max = 0;
-        for (int i = 0; i < count; ++i) {
-            int aux = 0;
-            for (int j = 0; j < count; ++j) {
-                if (first[i] == first[j]) {
-                    aux++;
-                }
-            }
-            if (aux > max) {
-                max = aux;
-                moda = first[i];
-            }
-        }
-        return moda;
-    };
-    void MaxSize() {
-        cout << "Max size: " << Dynarray::max_count << endl;
-    };
-    void alloc() {
-        T* aux_ = new T[Dynarray::max_count * 2];
-        for (int i = 0; i < Dynarray::count; ++i) {
-            aux_[i] = Dynarray::first[i];
-        }
-        delete[] Dynarray::first;
-        Dynarray::first = aux_;
-        Dynarray::max_count *= 2;
-    };
-
+    }
+    int size(){
+        return contador;
+    }
     void print() {
-        for (int i = 0; i < count; ++i) {
-            cout << first[i] << endl;
+        for (int i = 0; i < contador; ++i) {
+            cout << firstelemento[i] << endl;
         }
+    };
+    bool isEmpty() const {
+        return contador == 0;
     };
     //destructores
     ~Dynarray() {
-        delete[] Dynarray::first;
-        cout << "Dynarray deleted" << endl;
+        delete[] Dynarray::firstelemento;
+       // cout << "Dynarray deleted" << endl;
     };
+    void mostrarTodo(){
+        for (int i = 0; i < size(); ++i) {
+            cout << firstelemento[i].getTitulo() << endl;
+        }
+    }
+    void searchGenerico(string generico) {
+        bool encontrado = false;
+        if (contador != 0) {
+            for (int i = 0; i < contador; i++) {
+                if (firstelemento[i]->getTitulo() == generico || firstelemento[i]->getAlbum() == generico || firstelemento[i]->getAutor() == generico || firstelemento[i]->getGenero() == generico) {
+                    cout << "El elemento " << generico << " se encuentra en la posicion " << i << endl;
+                    encontrado = true;
+                    cout << "Titulo: " << firstelemento[i]->getTitulo() << endl;
+                    cout << "Album: " << firstelemento[i]->getAlbum() << endl;
+                    cout << "Autor: " << firstelemento[i]->getAutor() << endl;
+                    cout << "Genero: " << firstelemento[i]->getGenero() << endl;
+                }
+            }
+        } else {
+            cout << "El array esta vacio." << endl;
+        }
+        if (!encontrado) {
+            cout << "El elemento " << generico << " no se encuentra en el album" << endl;
+        }
 
+    }
+    void searchDyn(string generico) {
+        for (int i = 0; i < contador; ++i) {
+            firstelemento[i]->searchGenerico(generico);
+        }
+    }
+    auto operator[](size_t i){
+        if(i<contador){
+            return firstelemento[i];
+        }
+    }
+    T* getFirstelemento(){
+        return firstelemento;
+    }
 };
 
 #endif //GRUPO6_AC3_DYNARRAY_H

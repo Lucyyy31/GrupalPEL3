@@ -35,25 +35,62 @@ public:
         return genero;
     }
     void addCancion(Cancion c){
-        canciones->insert(c);
+        c.setAlbum(titulo);
+        canciones->push(c);
     }
+
     void mostrarCanciones(){
-        for (int i = 0; i < canciones->count; ++i) {
-            cout << canciones->first[i].getTitulo() << endl;
+        if (canciones != nullptr && canciones->size() > 0) {
+            cout << "Canciones del album " << getTitulo() << ":" << endl;
+            for (int i = 0; i < canciones->size(); ++i) {
+                cout << canciones->getFirstelemento()[i].getTitulo() << endl;
+            }
+        } else {
+            cout << "Este album no tiene canciones." << endl;
         }
     }
 
+/*
     void buscarAlbum(string a){
-        for (int i = 0; i < canciones->count; ++i) {
-            if (canciones->first[i].getAutor() == a){
-                cout << canciones->first[i].getTitulo() << endl;
+        for (int i = 0; i < canciones->size(); ++i) {
+            if (canciones->firstelemento[i].getTitulo() == a || canciones->firstelemento[i].getAlbum() == a ||
+            canciones->firstelemento[i].getAutor() == a || canciones->firstelemento[i].getGenero() == a) {
+                cout << "El elemento " << a << " se encuentra en la posicion " << i << endl;
+                cout << "Titulo: " << canciones->firstelemento[i].getTitulo() << endl;
+                cout << "Album: " << canciones->firstelemento[i].getAlbum() << endl;
+                cout << "Autor: " << canciones->firstelemento[i].getAutor() << endl;
+                cout << "Genero: " << canciones->firstelemento[i].getGenero() << endl;
             }
         }
     }
-
+    */
+    void searchGenerico(string generico) {
+        bool encontrado = false;
+        if (canciones->size() != 0) {
+            for (int i = 0; i < canciones->size(); i++) {
+                if (canciones->getFirstelemento()[i].getTitulo() == generico ||
+                    canciones->getFirstelemento()[i].getAlbum() == generico ||
+                    canciones->getFirstelemento()[i].getAutor() == generico ||
+                    canciones->getFirstelemento()[i].getGenero() == generico) {
+                    cout << "El elemento " << generico << " se encuentra en la posicion " << i << endl;
+                    encontrado = true;
+                    cout << "Titulo: " << canciones->getFirstelemento()[i].getTitulo() << endl;
+                    cout << "Album: " << canciones->getFirstelemento()[i].getAlbum() << endl;
+                    cout << "Autor: " << canciones->getFirstelemento()[i].getAutor() << endl;
+                    cout << "Genero: " << canciones->getFirstelemento()[i].getGenero() << endl;
+                }
+            }
+        } else {
+            cout << "El array esta vacio." << endl;
+        }
+        if (!encontrado) {
+            cout << "El elemento " << generico << " no se encuentra en el album" << endl;
+        }
+    }
     ~Album() {
         delete canciones;
-        cout << "Album deleted" << endl;
+        canciones = nullptr;
+       // cout << "Album deleted" << endl;
     }
 };
 #endif //GRUPO6_AC3_ALBUM_H

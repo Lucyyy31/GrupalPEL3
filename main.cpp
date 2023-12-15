@@ -2,7 +2,6 @@
 #include "Cancion.h"
 #include "DynArray.h"
 #include "Album.h"
-
 using namespace std;
 void mostrarMenu() {
     cout << "\nMenu del Catalogo:" << endl;
@@ -24,31 +23,32 @@ void menuMusica(Dynarray<Album> * albumes) {
         case 1:
             cout << "Canciones:" << endl;
             cout << "1. Mostrar todas las canciones" << endl;
-            cout << "2. Buscar canciones por autor" << endl;
-            cout << "3. Buscar canciones por genero" << endl;
-            cout << "4. Salir" << endl;
+            cout << "2. Buscar canciones" << endl;
+            cout << "3. Salir" << endl;
             cout << "Ingrese el numero de la opcion: ";
             int opcionCanciones;
             cin >> opcionCanciones;
             switch (opcionCanciones) {
                 case 1:
                     cout << "Mostrando todas las canciones:" << endl;
-                    for (int i = 0; i < albumes->count; ++i) {
-                        albumes->first[i].mostrarCanciones();
+                    for (int i = 0; i < albumes->size(); ++i) {
+                        albumes->getFirstelemento()[i].mostrarCanciones();
                     }
                     break;
                 case 2:
-                    cout << "Buscando canciones por autor:" << endl;
-                    for (int i = 0; i < albumes->count; ++i) {
-                        for(int j = 0; i < albumes->count; i++){
-                           // albumes->first[i][j].buscarCancion("Autor1");
+                    cout << "Buscando canciones:" << endl;
+                    {
+                        string genericoBuscado;
+                        cout << "Ingrese el autor, genero, nombre o album a buscar: ";
+                        cin.ignore();
+                        getline(cin, genericoBuscado);
+
+                        for (int i = 0; i < albumes->size(); ++i) {
+                            albumes->getFirstelemento()[i].searchGenerico(genericoBuscado);
                         }
                     }
                     break;
                 case 3:
-                    cout << "Buscando canciones por genero:" << endl;
-                    break;
-                case 4:
                     cout << "Saliendo del menu de canciones." << endl;
                     break;
                 default:
@@ -58,29 +58,29 @@ void menuMusica(Dynarray<Album> * albumes) {
         case 2:
             cout << "Albumes:" << endl;
             cout << "1. Mostrar todos los albumes" << endl;
-            cout << "2. Buscar albumes por autor" << endl;
-            cout << "3. Buscar albumes por genero" << endl;
-            cout << "4. Salir" << endl;
+            cout << "2. Buscar albumes" << endl;
+            cout << "3. Salir" << endl;
             cout << "Ingrese el numero de la opcion: ";
             int opcionAlbumes;
             cin >> opcionAlbumes;
             switch (opcionAlbumes) {
                 case 1:
                     cout << "Mostrando todos los albumes:" << endl;
-                    for (int i = 0; i < albumes->count; ++i) {
-                        cout << albumes->first[i].getTitulo() << endl;
-                    }
+                    albumes->mostrarTodo();
                     break;
-                case 2:
-                    cout << "Buscando albumes por autor:" << endl;
-                    for (int i = 0; i < albumes->count; ++i) {
-                        albumes->first[i].buscarAlbum("Autor1");
+                case 2: {
+                    cout << "Buscando albumes:" << endl;
+                    string genericoBuscado;
+                    cout << "Ingrese el autor, genero o nombre a buscar: ";
+                    cin.ignore();
+                    getline(cin, genericoBuscado);
+
+                    for (int i = 0; i < albumes->size(); ++i) {
+                        albumes->getFirstelemento()[i].searchGenerico(genericoBuscado);
                     }
+                }
                     break;
                 case 3:
-                    cout << "Buscando albumes por genero:" << endl;
-                    break;
-                case 4:
                     cout << "Saliendo del menu de album" << endl;
                     break;
                 default:
@@ -88,8 +88,8 @@ void menuMusica(Dynarray<Album> * albumes) {
 
             }
     }
-}
 
+}
 
 int main() {
     int opcion;
@@ -110,16 +110,20 @@ int main() {
                 Cancion cancion2("Cancion2", "Autor2", "Genero2");
                 Cancion cancion3("Cancion3", "Autor3", "Genero3");
 
-                canciones->insert(cancion1);
-                canciones->insert(cancion2);
-                canciones->insert(cancion3);
+                canciones->push(cancion1);
+                canciones->push(cancion2);
+                canciones->push(cancion3);
 
                 Album album1("Album1", "Autor1", "Genero1");
                 album1.addCancion(cancion1);
                 album1.addCancion(cancion2);
                 album1.addCancion(cancion3);
-                albumes->insert(album1);
-                menuMusica(albumes);
+                albumes->push(album1);
+                if (albumes->isEmpty()) {
+                    cout << "No hay albumes." << endl;
+                } else {
+                    menuMusica(albumes);
+                }
                 break;}
             case 2:
 

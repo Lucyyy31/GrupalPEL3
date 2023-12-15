@@ -31,7 +31,12 @@ public:
     string getGenero(){
         return genero;
     }
-
+    string getAlbum(){
+        return album;
+    }
+    void setAlbum(string a){
+        album = a;
+    }
     void buscarCancion(string a){
         if (autor == a){
             cout << titulo << endl;
