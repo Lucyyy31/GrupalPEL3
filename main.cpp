@@ -303,17 +303,18 @@ int main()
         break;
         case 2:
         {
-
-            string prompt = "Menu contenido audiovisual:\n1. Mostrar series/peliculas\n2. Buscar serie/pelicula\n3. Modificar catalogo\n4. Salir\nIngrese el numero de la opcion: ";
+            string prompt;
             string promptError = "Ingrese una opcion valida!";
             int pick = 0, pick2 = 0;
             while (pick != 4)
             {
+             prompt = "Menu contenido audiovisual:\n1. Mostrar series/peliculas\n2. Buscar serie/pelicula\n3. Modificar catalogo\n4. Salir\nIngrese el numero de la opcion: ";
                 pick2 = 0;
                 pick = getInput<int>(prompt, promptError, 0, [](int x)
                                      { return x > 0 && x < 5; });
                 switch (pick)
                 {
+
                 case 1:
                 {
 
@@ -345,7 +346,7 @@ int main()
                     pick2 = getInput<int>(prompt, promptError, 0, [](int x)
                                           { return x > 0 && x < 4; });
                     prompt = "Ingrese el titulo, genero o calidad a buscar: ";
-                    string genericoBuscado = getInput<string>(prompt, promptError, 0);
+                    string genericoBuscado = getInput<string>(prompt, promptError, 0,&isNotEmpty);
                     Vector<ContenidoAV *> contenidoBuscado = (catalogo.*catalogoFuncs[pick2 - 1])(genericoBuscado);
                     if (contenidoBuscado.size() == 0)
                     {
