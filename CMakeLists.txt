@@ -7,5 +7,8 @@ add_executable(Grupo6_AC3 main.cpp
         Cancion.h
         Dynarray.h
         Vector.h
-        Album.h)
+        Album.h
+        Catalogo.h
+        ContenidoAV.h
+)
 
