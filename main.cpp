@@ -4,12 +4,41 @@
 #include "DynArray.h"
 #include "Album.h"
 using namespace std;
+
+/// @brief un metodo que permite obtener un input del tipo T, con un mensaje de error y un limite de intentos
+/// @tparam T el tipo de dato que se quiere asegurar que sea el input
+/// @param promptInicial el mensaje inicial a mostrarse para pedir un input
+/// @param promptError el mensaje que se muestra si el intento es invalido
+/// @param maxIntentos el numero maximo de intentos permitidos. cualquier numero <=0 se considera infinito. si se llega al limite, se retorna un valor por defecto del tipo T
+/// @return el input del tipo T o un valor por defecto del tipo T si se llega al limite de intentos
+template <typename T>
+T getInput(const string promptInicial, const string promptError, int maxIntentos)
+{
+    if (maxIntentos == 0)
+        maxIntentos--;
+    T out;
+    cout << promptInicial << endl;
+    cin >> out;
+    while (!cin.good() && maxIntentos != 0)
+    {
+        std::cin.clear();
+        std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << promptError << endl;
+        cin >> out;
+    }
+    if (maxIntentos == 0)
+    {
+        return T();
+    }
+
+    return out;
+}
+
 void mostrarMenu() {
     cout << "\nMenu del Catalogo:" << endl;
     cout << "1. Canciones" << endl;
-    cout << "2. Peliculas" << endl;
-    cout << "3. Series" <<endl;
-    cout << "4. Salir" << endl;
+    cout << "2. Contenido audiovisual" << endl;
+    cout << "3. Salir" << endl;
     cout << "Ingrese el numero de la opcion: ";
 }
 void menuMusica(Dynarray<Album> * albumes) {
