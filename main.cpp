@@ -34,6 +34,70 @@ T getInput(const string promptInicial, const string promptError, int maxIntentos
     return out;
 }
 
+/// @brief un metodo que permite obtener un input del tipo T, con un mensaje de error, un limite de intentos y una funcion que evalua si el input es valido
+/// @tparam T el tipo de dato que se quiere asegurar que sea el input
+/// @param promptInicial el mensaje inicial a mostrarse para pedir un input
+/// @param promptError el mensaje que se muestra si el intento es invalido
+/// @param maxIntentos el numero maximo de intentos permitidos. cualquier numero <=0 se considera infinito
+/// @param eval una funcion que evalua si el input es valido según un criterio propio
+/// @return el input del tipo T,que cumple con la condición de eval, o un valor por defecto del tipo T si se llega al limite de intentos
+template <typename T>
+T getInput(string promptInicial, string promptError, int maxIntentos, function<bool(T)> eval)
+{
+    if (maxIntentos == 0)
+        maxIntentos--;
+    T out;
+    cout << promptInicial << endl;
+    cin >> out;
+    bool cont = false;
+    bool exempt = false;
+    try
+    {
+        eval(T());
+        exempt = false;
+    }
+    catch (...)
+    {
+        exempt = true;
+    }
+    while (!cont)
+    {
+        while (!cin.good() && maxIntentos-- != 0)
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << promptError << endl;
+            cin >> out;
+        }
+        // tengo un valor del tipo correcto, no sé si es apropiado según eval
+        if (!exempt)
+        {
+            // la funcion eval no aplica
+            if (eval(out))
+            {
+                cont = true;
+            }
+
+            // ahora se si pasa la condición. si no pasa, quiero volver a preguntar, es decir no cambio la condicion de escape
+            else
+            {
+                cout << promptError << endl;
+                cin >> out;
+            }
+        }
+        else
+            cont = true;
+    }
+    if (maxIntentos == 0)
+    {
+        return T();
+    }
+    return out;
+}
+bool isNotEmpty(string s){
+    return s != "";
+}
+
 void mostrarMenu() {
     cout << "\nMenu del Catalogo:" << endl;
     cout << "1. Canciones" << endl;
@@ -123,7 +187,7 @@ void menuMusica(Dynarray<Album> * albumes) {
 
 int main() {
     int opcion;
-
+    srand(time(NULL));
     do {
         mostrarMenu();
         while (!(cin >> opcion)) {
@@ -187,12 +251,89 @@ int main() {
                     break;
                 }
                 case 2:
+                    string prompt = "Menu contenido audiovisual:\n1. Mostrar series/peliculas\n2. Buscar serie/pelicula\n3. Modificar catalogo\n4. Salir\nIngrese el numero de la opcion: ";
+                    string promptError = "Ingrese una opcion valida!";
+                    int pick =0,pick2=0;
+                    while(pick!=4){
+                        pick2=0;
+                     pick = getInput<int>(prompt, promptError, 0, [](int x) { return x > 0 && x < 5; });
+                     switch(pick){
+                        case 1:
+                        prompt = "1. Mostrar todas las series\n2. Mostrar todas las peliculas\n3. Mostrar todas las series y peliculas\nIngrese el numero de la opcion: ";
+                        pick2 = getInput<int>(prompt, promptError, 0, [](int x) { return x > 0 && x < 4; });
+                        Vector<ContenidoAV*> contenido = catalogo.getContenido();
+                        if(pick2!=2){
+                            for(Pelicula* pelicula: contenido.getPeliculas()){
+                                cout << *pelicula << endl;
+                            }
+                        }
+                        if(pick2!=1){
+                            for(Serie* serie: contenido.getSeries()){
+                                cout << *serie << endl;
+                            }
+                        }
+                        break;
+                        case 2:
+                        //create an array of the member functions of catalogo that return a vector of ContenidoAV*
+                        (Vector<ContenidoAV*> (Catalogo::*) (string)) catalogoFuncs[] = {&Catalogo::getContenidoByTitulo, &Catalogo::getContenidoByGenero, &Catalogo::getContenidoByCalidad};
+                        prompt = "1. Buscar por titulo\n2. Buscar por genero\n3. Buscar por calidad\nIngrese el numero de la opcion: ";
+                        pick2 = getInput<int>(prompt, promptError, 0, [](int x) { return x > 0 && x < 4; });
+                        prompt = "Ingrese el titulo, genero o calidad a buscar: ";
+                        string genericoBuscado = getInput<string>(prompt, promptError, 0);
+                        Vector<ContenidoAV*> contenidoBuscado = (catalogo.*catalogoFuncs[pick2-1])(genericoBuscado);
+                        if(contenidoBuscado.size() == 0){
+                            cout << "No se encontró el contenido" << endl;
+                        }
+                        else{
+                            for(ContenidoAV* contenido: contenidoBuscado){
+                                cout << *contenido << endl;
+                            }
+                        }
+                        break;
+                        case 3:
+                        prompt = "1. Agregar contenido\n2. Eliminar contenido\nIngrese el numero de la opcion: ";
+                        pick2 = getInput<int>(prompt, promptError, 0, [](int x) { return x > 0 && x < 3; });
+                        bool makeUHD, makePPV, serie;
+                        string titulo, genero;
+                        float ppvPrice;
+                        int typeSpecific;
+                        serie = getInput<string>("Es una serie o pelicula?: ", promptError, 0,[&](string x){return x == "serie" || x == "pelicula";}) == "serie";
+                        titulo = getInput<string>("Ingrese el titulo: ", promptError, 0, isNotEmpty);
+                        genero = getInput<string>("Ingrese el genero: ", promptError, 0, isNotEmpty);
+                        makeUHD = getInput<string>("Es UHD?(si/no): ", promptError, 0, [](string x){return x == "si" || x == "no";}) == "si";
+                        if(serie){
+                            typeSpecific = getInput<int>("Ingrese el numero de episodios: ", promptError, 0, [](int x){return x > 0;});
+                        }
+                        else{
+                            typeSpecific = getInput<int>("Ingrese la duracion en minutos: ", promptError, 0, [](int x){return x > 0;});
+                        }
+                        makePPV = getInput<string>("Está incluido en la tarifa basica?(si/no): ", promptError, 0, [](string x){return x == "si" || x == "no";}) == "si";
+                        if(makePPV){
+                            ppvPrice = getInput<float>("Ingrese el costo adicional: ", promptError, 0, [](float x){return x > 0;});
+                        }
+                        if(serie){
+                            if(makePPV){
+                                catalogo.addContenido(new Serie(titulo, genero, makeUHD, makePPV, ppvPrice, typeSpecific));
+                            }
+                            else{
+                                catalogo.addContenido(new Serie(titulo, genero, makeUHD, typeSpecific));
+                            }
+                        }
+                        else{
+                            if(makePPV){
+                                catalogo.addContenido(new Pelicula(titulo, genero, makeUHD, makePPV, ppvPrice, typeSpecific));
+                            }
+                            else{
+                                catalogo.addContenido(new Pelicula(titulo, genero, makeUHD, typeSpecific));
+                            }
+                        }
+                        break;
+                        
+                     }
+                    }
 
                     break;
                 case 3:
-
-                    break;
-                case 4:
                     cout << "Saliendo del programa." << endl;
                 break;
                 default:

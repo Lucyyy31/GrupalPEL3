@@ -93,5 +93,32 @@ public:
         return contenidoAvailable;
     }
 
+    Vector<ContenidoAV*> getSeries(){
+        Vector<ContenidoAV*> contenidoSeries;
+        string idSerie=typeid(Serie).name();
+        for(int i = 0; i < contenido.size(); i++){
+            if(typeid(contenido[i]).name()==idSerie){
+                contenidoSeries.push_back(contenido[i]);
+            }
+        }
+        return contenidoSeries;
+    }
+    Vector<ContenidoAV*> getPeliculas(){
+        Vector<ContenidoAV*> contenidoPeliculas;
+        string idPelicula=typeid(Pelicula).name();
+        for(int i = 0; i < contenido.size(); i++){
+            if(typeid(contenido[i]).name()==idPelicula){
+                contenidoPeliculas.push_back(contenido[i]);
+            }
+        }
+        return contenidoPeliculas;
+    }
+    friend ostream& operator<<(ostream& os, const Catalogo& catalogo){
+        os << "Catalogo" << endl;
+        for(int i = 0; i < catalogo.contenido.size(); i++){
+            os << catalogo.contenido[i]->getTitulo() << endl;
+        }
+        return os;
+    }
 };
 #endif //GRUPO6_AC3_CATALOGO_H
